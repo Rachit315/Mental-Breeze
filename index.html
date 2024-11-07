@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Breeze</title>
+    <style>
+        :root {
+    --primary-color: #3A506B;
+    --secondary-color: #1C2541;
+    --text-color: #E0E1DD;
+    --background-color: #0B132B;
+    --accent-color: #5BC0BE;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    overflow-x: hidden;
+}
+
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+header {
+    background-color: rgba(28, 37, 65, 0.9);
+    backdrop-filter: blur(5px);
+    padding: 1rem 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+header.scrolled {
+    background-color: rgba(28, 37, 65, 0.95);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-left: 2rem;
+}
+
+nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    color: var(--accent-color);
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem 2rem;
+}
+
+section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+h1, h2, h3 {
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 3rem;
+    color: var(--accent-color);
+}
+
+h2 {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+}
+
+p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+}
+
+.resource-item {
+    background-color: var(--secondary-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resource-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+input, textarea {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    font-family: 'Quicksand', sans-serif;
+    color: var(--text-color);
+}
+
+button {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+button:hover {
+    background-color: var(--primary-color);
+}
+
+footer {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+    }
+
+    nav ul {
+        margin-top: 1rem;
+    }
+
+    nav ul li {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+}
+.cursor {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(91, 192, 190, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+    z-index: 9999;
+  }
+  
+  body:hover .cursor {
+    width: 60px;
+    height: 60px;
+  }
+  /* ... (keep all existing styles) ... */
+
+/* Add these new styles at the end of the file */
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideIn {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 1s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .animate-delay-1 {
+    animation-delay: 0.2s;
+  }
+  
+  .animate-delay-2 {
+    animation-delay: 0.4s;
+  }
+  
+  .animate-delay-3 {
+    animation-delay: 0.6s;
+  }
+  
+  /* Logo animation */
+  .logo {
+    transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+  }
+  
+  /* Resource item hover animation */
+  .resource-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Smooth scrolling for the whole page */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Button hover animation */
+  button {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Navigation link hover animation */
+  nav ul li a {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  
+  nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--accent-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  
+  nav ul li a:hover::after {
+    transform: scaleX(1);
+  }
+  /* ... (keep all existing styles) ... */
+
+/* Add these new styles at the end of the file */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  .fluid-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #3A506B, #1C2541, #5BC0BE);
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+  }
+  
+  @keyframes gradientFlow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .hero h1,
+  .hero p {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero p {
+    font-size: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  /* Adjust the video background */
+  .video-background {
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+  }
+  
+  /* Ensure other sections don't overlap with the hero */
+  
+  #resources {
+    background-color: var(--background-color);
+    position: relative;
+    z-index: 1;
+  }
+  .hero {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .fluid-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #3A506B, #1C2541, #5BC0BE);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .hero h1,
+        .hero p {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Adjust the video background */
+        .video-background {
+            opacity: 0.3;
+            mix-blend-mode: overlay;
+        }
+
+        /* Ensure other sections don't overlap with the hero */
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--accent-color);
+            color: var(--background-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, background-color 0.3s;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-to-top:hover {
+            background-color: var(--primary-color);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top::after {
+            content: "↑";
+            font-size: 24px;
+        }
+
+        /* Adjust for light mode */
+        body.light-mode .back-to-top {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        body.light-mode .back-to-top:hover {
+            background-color: var(--accent-color);
+            color: var(--background-color);
+        }
+    
+        
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+
+    <video class="video-background" autoplay loop muted playsinline>
+        <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/forest-scene-7tGXODztD8j9Xk8d1680ILlIWbwB9O.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <header>
+        <nav>
+            <div class="logo">Mental Breeze</div>
+            <ul>
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="fluid-background"></div>
+            <div class="hero-content">
+                <h1 class="animate-fade-in">Welcome to Mental Breeze</h1>
+                <p class="animate-fade-in animate-delay-1">Your sanctuary for mental well-being and inner peace in the digital age.</p>
+            </div>
+        </section>
+
+        <section id="about">
+           <a href="./about.html"  style="text-decoration: none;" ><h2 class="animate-slide-in">About Us</h2></a> 
+            <p class="animate-slide-in animate-delay-1">Mental Breeze is a revolutionary project aimed at providing accessible mental health resources and support to individuals in the digital age. Our platform combines cutting-edge technology with evidence-based mental health practices to create a sanctuary for those seeking inner peace and emotional well-being.</p>
+        </section>
+
+        <section id="resources">
+            <h2>Mental Health Resources</h2>
+            <div class="resource-grid">
+                <div class="resource-item">
+                    <h3>Meditation Guides</h3>
+                    <p>Discover the power of mindfulness with our curated meditation guides, designed to help you find calm in the chaos.</p>
+                </div>
+                <div class="resource-item">
+                    <h3>Self-Care Tips</h3>
+                    <p>Learn practical self-care strategies to enhance your daily well-being and build resilience against stress.</p>
+                </div>
+                <div class="resource-item">
+                    <h3>Stress Management</h3>
+                    <p>Explore effective techniques to manage and reduce stress in your life, tailored for the modern lifestyle.</p>
+                </div>
+                <div class="resource-item">
+                    <h3>Support Groups</h3>
+                    <p>Connect with others and share experiences in our supportive online community, because you're never alone in your journey.</p>
+                </div>
+                <div class="resource-item">
+                    <h3>Sleep Hygiene</h3>
+                    <p>Improve your sleep quality with tips on establishing healthy sleep habits that rejuvenate both mind and body.</p>
+                </div>
+                <div class="resource-item">
+                    <h3>Therapy Resources</h3>
+                    <p>Access information on different therapy options and how to find professional mental health support that fits your needs.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Mental Breeze. All rights reserved.</p>
+    </footer>
+    <a href="#" class="back-to-top" aria-label="Back to top"></a>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.querySelector('.cursor');
+            const header = document.querySelector('header');
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav ul li a');
+            const logo = document.querySelector('.logo');
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            const backToTopButton = document.querySelector('.back-to-top');
+
+            const handleMouseMove = (e) => {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+                if (logo) {
+                    const rect = logo.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const angleX = (e.clientY - centerY) / 20;
+                    const angleY = (centerX - e.clientX) / 20;
+                    logo.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+                }
+            };
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.3
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        navLinks.forEach(link => {
+                            if (link.getAttribute('href') === `#${entry.target.id}`) {
+                                link.classList.add('active');
+                            } else {
+                                link.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            const handleScroll = () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            };
+
+            window.addEventListener('scroll', handleScroll);
+            window.addEventListener('mousemove', handleMouseMove);
+
+            const resourceItems = document.querySelectorAll('.resource-item');
+            resourceItems.forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    item.style.transform = 'scale(1.05)';
+                    item.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+                });
+                item.addEventListener('mouseleave', () => {
+                    item.style.transform = 'scale(1)';
+                    item.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                });
+            });
+
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            body.classList.toggle('light-mode', currentTheme === 'light');
+            themeToggle.checked = currentTheme === 'light';
+
+            themeToggle.addEventListener('change', () => {
+                body.classList.toggle('light-mode');
+                const theme = body.classList.contains('light-mode') ? 'light' : 'dark';
+                localStorage.setItem('theme', theme);
+            });
+
+            backToTopButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
